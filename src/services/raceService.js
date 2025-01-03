@@ -10,36 +10,33 @@ class RaceService {
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
-                    '--disable-software-rasterizer',
-                    '--disable-extensions',
-                    '--single-process',
-                    '--no-zygote',
-                    '--no-first-run',
-                    '--window-size=1920,1080'
-                ],
-                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
+                    '--disable-dev-shm-usage'
+                ]
             };
 
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
             browser = await puppeteer.launch(options);
             const page = await browser.newPage();
             
-            console.log(`Navigating to ${url}`);
-            await page.goto(url, { waitUntil: 'networkidle0' });
+            // Set a reasonable viewport
+            await page.setViewport({ width: 1280, height: 800 });
             
-            // Wait for content to load using different selectors for each site
-            if (url.includes('ultrasignup.com')) {
-                await page.waitForSelector('table', { timeout: 10000 });
-            } else {
-                // For Pacific Multisports, wait for any table or iframe
-                await Promise.race([
-                    page.waitForSelector('table', { timeout: 10000 }),
-                    page.waitForSelector('iframe', { timeout: 10000 })
-                ]);
+            console.log(`Navigating to ${url}`);
+            
+            // More robust navigation with timeout and waitUntil conditions
+            await page.goto(url, { 
+                waitUntil: ['networkidle0', 'domcontentloaded'],
+                timeout: 30000 
+            });
 
-                // Check if there's an iframe and handle it
+            // Use setTimeout instead of waitForTimeout
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Different handling for each site
+            if (url.includes('ultrasignup.com')) {
+                await page.waitForSelector('tr', { timeout: 10000 });
+            } else {
+                // For Pacific Multisports
                 const iframe = await page.$('iframe');
                 if (iframe) {
                     console.log('Found iframe, switching context...');
@@ -57,13 +54,12 @@ class RaceService {
             const content = await page.content();
             console.log('Page loaded successfully');
 
-            // Debug: Log the available elements
-            const tables = await page.$$eval('table', tables => tables.length);
-            console.log(`Found ${tables} tables on the page`);
-
-            return { type: url.includes('ultrasignup.com') ? 'ultrasignup' : 'pacific', html: content };
+            return { 
+                type: url.includes('ultrasignup.com') ? 'ultrasignup' : 'pacific', 
+                html: content 
+            };
         } catch (error) {
-            console.error('Error fetching results:', error);
+            console.error('Error details:', error);
             throw new Error(`Failed to fetch race results: ${error.message}`);
         } finally {
             if (browser) {
