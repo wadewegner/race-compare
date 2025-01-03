@@ -11,7 +11,6 @@ class RaceService {
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     '--disable-gpu',
-                    '--single-process',
                     '--disable-extensions',
                     '--disable-software-rasterizer',
                     '--window-size=1280,800',
