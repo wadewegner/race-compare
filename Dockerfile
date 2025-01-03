@@ -1,30 +1,33 @@
-# Use multi-platform build
-FROM --platform=$BUILDPLATFORM ghcr.io/puppeteer/puppeteer:21.7.0
+FROM node:18-alpine
+
+# Install Chromium and dependencies
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 # Create and set working directory
 WORKDIR /app
 
-# Change ownership of the working directory to the puppeteer user
-RUN chown -R pptruser:pptruser /app
+# Set environment variables
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-# Switch to the puppeteer user
-USER pptruser
-
-# Copy package files with correct ownership
-COPY --chown=pptruser:pptruser package*.json ./
+# Copy package files
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application with correct ownership
-COPY --chown=pptruser:pptruser . .
+# Copy the rest of the application
+COPY . .
 
 # Expose the port
 EXPOSE 8080
-
-# Set environment variables
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 # Start the app
 CMD ["npm", "start"] 
