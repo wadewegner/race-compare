@@ -9,7 +9,11 @@ RUN apk add --no-cache \
     harfbuzz \
     ca-certificates \
     ttf-freefont \
-    dumb-init
+    dumb-init \
+    udev \
+    ttf-liberation \
+    font-noto-emoji \
+    fontconfig
 
 # Create and set working directory
 WORKDIR /app
@@ -19,6 +23,7 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && mkdir -p /app/.chrome/tmp \
     && mkdir -p /app/.chrome/data \
+    && mkdir -p /app/.cache/puppeteer \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /app
 
@@ -31,7 +36,8 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_DISABLE_DEV_SHM_USAGE=true \
     CHROME_PATH=/usr/bin/chromium-browser \
     CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox \
-    NODE_ENV=production
+    NODE_ENV=production \
+    PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
 
 # Copy package files with correct ownership
 COPY --chown=pptruser:pptruser package*.json ./

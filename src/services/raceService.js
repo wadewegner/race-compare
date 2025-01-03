@@ -11,18 +11,16 @@ class RaceService {
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     '--disable-gpu',
-                    '--no-zygote',
-                    '--single-process',
                     '--disable-extensions',
                     '--disable-software-rasterizer',
-                    '--disable-accelerated-2d-canvas',
-                    '--disable-web-security',
-                    '--no-first-run',
-                    '--window-size=1280,800'
+                    '--window-size=1280,800',
+                    '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
                 executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-                protocolTimeout: 60000,
-                timeout: 60000
+                defaultViewport: {
+                    width: 1280,
+                    height: 800
+                }
             };
 
             // Add environment info logging
@@ -41,23 +39,30 @@ class RaceService {
             browser = await puppeteer.launch(options);
             const page = await browser.newPage();
             
-            // Set a reasonable viewport
-            await page.setViewport({ width: 1280, height: 800 });
+            // Set headers to mimic a real browser
+            await page.setExtraHTTPHeaders({
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1'
+            });
             
             console.log(`Navigating to ${url}`);
             
-            // More robust navigation with timeout and waitUntil conditions
-            await page.goto(url, { 
-                waitUntil: ['networkidle0', 'domcontentloaded'],
+            // Navigate to the page and wait for content to load
+            const response = await page.goto(url, { 
+                waitUntil: 'networkidle0',
                 timeout: 30000 
             });
 
-            // Use setTimeout instead of waitForTimeout
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Different handling for each site
+            if (!response || !response.ok()) {
+                throw new Error(`Failed to load page: ${response ? response.status() : 'no response'}`);
+            }
+
+            let content;
             if (url.includes('ultrasignup.com')) {
                 await page.waitForSelector('tr', { timeout: 10000 });
+                content = await page.content();
             } else {
                 // For Pacific Multisports
                 const iframe = await page.$('iframe');
@@ -67,16 +72,15 @@ class RaceService {
                     if (frame) {
                         console.log('Switched to iframe context');
                         await frame.waitForSelector('table', { timeout: 5000 });
-                        const content = await frame.content();
-                        return { type: 'pacific', html: content };
+                        content = await frame.content();
                     }
+                }
+                if (!content) {
+                    content = await page.content();
                 }
             }
 
-            // Get the rendered HTML
-            const content = await page.content();
             console.log('Page loaded successfully');
-
             return { 
                 type: url.includes('ultrasignup.com') ? 'ultrasignup' : 'pacific', 
                 html: content 
