@@ -1,6 +1,7 @@
 name: race-compare
 services:
-- dockerfile_path: Dockerfile
+- name: race-compare
+  dockerfile_path: Dockerfile
   github:
     branch: main
     deploy_on_push: true
@@ -8,5 +9,4 @@ services:
   http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xs
-  name: race-compare
   source_dir: /
