@@ -11,7 +11,7 @@ class RaceService {
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage'
                 ],
-                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
+                executablePath: '/usr/bin/chromium-browser'
             };
 
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
