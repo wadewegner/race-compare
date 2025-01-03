@@ -25,14 +25,30 @@ For example, if you completed Race A in 4 hours, and you find that other runners
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm (comes with Node.js)
+- Docker (recommended)
+- OR Node.js (v18 or higher)
 
-### Installation
+### Running with Docker (Recommended)
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/race-compare.git
+git clone https://github.com/wadewegner/race-compare.git
+cd race-compare
+```
+
+2. Build and run with Docker:
+```bash
+docker build -t race-compare .
+docker run -p 8080:8080 race-compare
+```
+
+3. Open your browser and navigate to `http://localhost:8080`
+
+### Running Locally with Node.js
+
+1. Clone the repository:
+```bash
+git clone https://github.com/wadewegner/race-compare.git
 cd race-compare
 ```
 
@@ -46,7 +62,12 @@ npm install
 npm start
 ```
 
-4. Open your browser and navigate to \`http://localhost:3000\`
+4. Open your browser and navigate to `http://localhost:8080`
+
+### Environment Variables
+
+- `NODE_ENV`: Set to 'production' or 'development' (default: 'development')
+- `PORT`: Port to run the server on (default: 8080)
 
 ## How to Use
 
@@ -61,12 +82,12 @@ npm start
 ## Supported Race Result Websites
 
 ### UltraSignup
-- Format: \`https://ultrasignup.com/results_event.aspx?did=XXXXX\`
-- Example: \`https://ultrasignup.com/results_event.aspx?did=103984\`
+- Format: `https://ultrasignup.com/results_event.aspx?did=XXXXX`
+- Example: `https://ultrasignup.com/results_event.aspx?did=103984`
 
 ### Pacific Multisports
-- Format: \`https://register.pacificmultisports.com/Events/Results/XXXX\`
-- Example: \`https://register.pacificmultisports.com/Events/Results/1171\`
+- Format: `https://register.pacificmultisports.com/Events/Results/XXXX`
+- Example: `https://register.pacificmultisports.com/Events/Results/1171`
 
 ## Technical Details
 
@@ -74,6 +95,17 @@ npm start
 - Uses Puppeteer for web scraping
 - EJS templating for the frontend
 - Bootstrap for styling
+- Docker containerization for consistent environments
+- Runs Chrome in headless mode
+
+## Development Notes
+
+When running in Docker, the application uses a non-root user (pptruser) and includes necessary Chrome/Puppeteer optimizations for containerized environments. The Docker setup includes:
+
+- Chromium browser installation
+- Proper permissions and Chrome directories
+- Security optimizations for headless Chrome
+- Process management with dumb-init
 
 ## Contributing
 
