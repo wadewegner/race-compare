@@ -1,0 +1,43 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+envs:
+- key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+  scope: RUN_AND_BUILD_TIME
+  value: "true"
+- key: NODE_ENV
+  scope: RUN_AND_BUILD_TIME
+  value: production
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: race-compare
+    match:
+      path:
+        prefix: /
+name: race-compare
+region: nyc
+services:
+- name: web
+  github:
+    branch: main
+    deploy_on_push: true
+  buildpacks:
+    - name: heroku/google-chrome
+      url: https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku/google-chrome.tgz
+    - name: browserless/chrome
+      url: https://buildpack-registry.s3.amazonaws.com/buildpacks/browserless/chrome.tgz
+    - name: nodejs
+  env:
+    - key: NODE_ENV
+      value: production
+    - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+      value: "true"
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  name: race-compare
+  run_command: npm start
+  source_dir: /

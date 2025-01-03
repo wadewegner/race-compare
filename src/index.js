@@ -40,6 +40,15 @@ app.post('/compare', async (req, res) => {
     }
 });
 
+// Add global error handler
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server starting on port ${port}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);

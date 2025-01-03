@@ -14,8 +14,12 @@ class RaceService {
                     '--disable-gpu',
                     '--disable-software-rasterizer',
                     '--disable-extensions',
-                    '--single-process'
-                ]
+                    '--single-process',
+                    '--no-zygote',
+                    '--no-first-run',
+                    '--window-size=1920,1080'
+                ],
+                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
             };
 
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
