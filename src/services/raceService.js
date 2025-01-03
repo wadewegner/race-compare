@@ -14,6 +14,13 @@ class RaceService {
                 executablePath: '/usr/bin/chromium-browser'
             };
 
+            // Add environment info logging
+            console.log('Environment details:');
+            console.log('- Current user:', require('os').userInfo().username);
+            console.log('- Current directory:', process.cwd());
+            console.log('- Chrome path exists:', require('fs').existsSync('/usr/bin/chromium-browser'));
+            console.log('- Process memory:', process.memoryUsage());
+
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
             browser = await puppeteer.launch(options);
             const page = await browser.newPage();
