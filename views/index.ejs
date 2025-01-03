@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Time Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Race Time Predictor</h1>
+        <form action="/compare" method="POST">
+            <div class="mb-3">
+                <label for="raceUrl1" class="form-label">Enter URL for your completed race results:</label>
+                <input type="url" class="form-control" id="raceUrl1" name="raceUrl1" 
+                    value="https://register.pacificmultisports.com/Events/Results/1171#0_3EF1B7" required>
+            </div>
+            <div class="mb-3">
+                <label for="raceUrl2" class="form-label">Enter URL for the race you want to predict:</label>
+                <input type="url" class="form-control" id="raceUrl2" name="raceUrl2" 
+                    value="https://ultrasignup.com/results_event.aspx?did=103984" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Compare Races</button>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
