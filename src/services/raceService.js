@@ -9,9 +9,17 @@ class RaceService {
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage'
+                    '--disable-dev-shm-usage',
+                    '--disable-gpu',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-extensions',
+                    '--disable-software-rasterizer',
+                    '--memory-pressure-off',
+                    '--max-old-space-size=512'
                 ],
-                executablePath: '/usr/bin/chromium-browser'
+                executablePath: '/usr/bin/chromium-browser',
+                protocolTimeout: 30000
             };
 
             // Add environment info logging

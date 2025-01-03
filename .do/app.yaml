@@ -8,5 +8,5 @@ services:
     repo: wadewegner/race-compare
   http_port: 8080
   instance_count: 1
-  instance_size_slug: basic-xs
+  instance_size_slug: basic-s
   source_dir: /
