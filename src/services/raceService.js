@@ -15,11 +15,14 @@ class RaceService {
                     '--single-process',
                     '--disable-extensions',
                     '--disable-software-rasterizer',
-                    '--memory-pressure-off',
-                    '--max-old-space-size=512'
+                    '--disable-accelerated-2d-canvas',
+                    '--disable-web-security',
+                    '--no-first-run',
+                    '--window-size=1280,800'
                 ],
-                executablePath: '/usr/bin/chromium-browser',
-                protocolTimeout: 30000
+                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+                protocolTimeout: 60000,
+                timeout: 60000
             };
 
             // Add environment info logging
@@ -28,6 +31,11 @@ class RaceService {
             console.log('- Current directory:', process.cwd());
             console.log('- Chrome path exists:', require('fs').existsSync('/usr/bin/chromium-browser'));
             console.log('- Process memory:', process.memoryUsage());
+            console.log('- Environment variables:', {
+                PUPPETEER_EXECUTABLE_PATH: process.env.PUPPETEER_EXECUTABLE_PATH,
+                CHROME_PATH: process.env.CHROME_PATH,
+                NODE_ENV: process.env.NODE_ENV
+            });
 
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
             browser = await puppeteer.launch(options);

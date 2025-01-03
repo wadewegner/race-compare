@@ -9,16 +9,16 @@ name: race-compare
 region: nyc
 services:
 - dockerfile_path: Dockerfile
+  envs:
+  - key: NODE_ENV
+    scope: RUN_TIME
+    value: production
   github:
     branch: main
     deploy_on_push: true
     repo: wadewegner/race-compare
   http_port: 8080
   instance_count: 1
-  instance_size_slug: basic-s
+  instance_size_slug: apps-d-1vcpu-2gb
   name: race-compare
   source_dir: /
-  envs:
-  - key: NODE_ENV
-    scope: RUN_TIME
-    value: production
