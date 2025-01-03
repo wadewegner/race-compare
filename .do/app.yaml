@@ -18,3 +18,7 @@ services:
   instance_size_slug: basic-s
   name: race-compare
   source_dir: /
+  envs:
+  - key: NODE_ENV
+    scope: RUN_TIME
+    value: production

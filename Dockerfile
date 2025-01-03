@@ -13,8 +13,10 @@ RUN apk add --no-cache \
 # Create and set working directory
 WORKDIR /app
 
-# Add a non-root user
+# Add a non-root user and setup Chrome directories
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
+    && mkdir -p /home/pptruser/Downloads /app/.chrome/tmp \
+    && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /app
 
 # Change to non-root user
@@ -22,7 +24,10 @@ USER pptruser
 
 # Set environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    PUPPETEER_DISABLE_DEV_SHM_USAGE=true \
+    CHROME_PATH=/usr/bin/chromium-browser \
+    CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox
 
 # Copy package files with correct ownership
 COPY --chown=pptruser:pptruser package*.json ./
