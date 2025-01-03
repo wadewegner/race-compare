@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "npx puppeteer browsers install chrome && node src/index.js",
+    "start": "node src/index.js",
     "dev": "NODE_ENV=development node src/index.js",
     "prod": "NODE_ENV=production node src/index.js"
   },

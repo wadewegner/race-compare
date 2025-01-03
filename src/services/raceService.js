@@ -4,14 +4,14 @@ class RaceService {
     static async fetchRaceResults(url) {
         let browser;
         try {
-            // Simplified options for App Platform
             const options = {
                 headless: 'new',
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage'
-                ]
+                ],
+                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
             };
 
             console.log('Launching browser with options:', JSON.stringify(options, null, 2));
