@@ -4,21 +4,16 @@ class RaceService {
     static async fetchRaceResults(url) {
         let browser;
         try {
-            // Different launch configurations based on environment
+            // Simplified options for App Platform
             const options = {
-                headless: 'new'
+                headless: 'new',
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox'
+                ]
             };
 
-            // Add additional args only in production/DigitalOcean environment
-            if (process.env.NODE_ENV === 'production') {
-                options.args = [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--single-process'
-                ];
-            }
-
+            console.log('Launching browser with options:', JSON.stringify(options, null, 2));
             browser = await puppeteer.launch(options);
             const page = await browser.newPage();
             
