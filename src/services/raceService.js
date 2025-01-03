@@ -4,9 +4,22 @@ class RaceService {
     static async fetchRaceResults(url) {
         let browser;
         try {
-            browser = await puppeteer.launch({
+            // Different launch configurations based on environment
+            const options = {
                 headless: 'new'
-            });
+            };
+
+            // Add additional args only in production/DigitalOcean environment
+            if (process.env.NODE_ENV === 'production') {
+                options.args = [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--single-process'
+                ];
+            }
+
+            browser = await puppeteer.launch(options);
             const page = await browser.newPage();
             
             console.log(`Navigating to ${url}`);
