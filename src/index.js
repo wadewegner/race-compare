@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { convertTimeToMinutes } = require('./utils/timeUtils');
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -19,22 +20,54 @@ app.get('/', (req, res) => {
 
 app.post('/compare', async (req, res) => {
     try {
-        const { raceUrl1, raceUrl2 } = req.body;
+        const { raceUrl1, raceUrl2, runnerName } = req.body;
         const raceService = require('./services/raceService');
         
         // Get both the comparison results and the individual race results
         const { matches, athletes1, athletes2 } = await raceService.compareRaces(raceUrl1, raceUrl2);
+
+        // Find user's result and calculate closest matches
+        let userResult = null;
+        let closestMatches = [];
+
+        if (runnerName) {
+            const normalizedUserName = runnerName.toLowerCase().trim();
+            const [firstName, lastName] = normalizedUserName.split(' ');
+            
+            userResult = athletes1.find(a => {
+                const normalizedName = a.originalName.toLowerCase().trim();
+                return normalizedName === normalizedUserName || // Exact match
+                       normalizedName === `${lastName}, ${firstName}`; // Last, First format
+            });
+
+            if (userResult) {
+                const userTimeMinutes = convertTimeToMinutes(userResult.time);
+                const matchesWithDiff = matches.map(result => ({
+                    ...result,
+                    timeDiff: Math.abs(convertTimeToMinutes(result.race1Time) - userTimeMinutes)
+                }));
+                
+                closestMatches = matchesWithDiff
+                    .sort((a, b) => a.timeDiff - b.timeDiff)
+                    .slice(0, 2)
+                    .map(match => match.name);
+            }
+        }
         
         res.render('results', { 
             results: matches,
             athletes1: athletes1 || [],
-            athletes2: athletes2 || []
+            athletes2: athletes2 || [],
+            runnerName,
+            userResult,
+            closestMatches
         });
     } catch (error) {
         res.render('results', { 
             results: [],
             athletes1: [],
             athletes2: [],
+            runnerName: req.body.runnerName,
             error: error.message
         });
     }

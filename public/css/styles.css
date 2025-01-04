@@ -1,0 +1,58 @@
+/* Common styles for all pages */
+body {
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.form-container, .results-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.btn-primary {
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+}
+
+.description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Results page specific styles */
+.user-result {
+    background: #e3f2fd;
+    border-left: 4px solid #007bff;
+}
+
+.closest-match {
+    background: #f0fff4;
+    border-left: 4px solid #28a745;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+.highlight-text {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.back-button {
+    margin-bottom: 2rem;
+} 

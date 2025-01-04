@@ -5,95 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Race Comparison Results</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Race Comparison Results</h1>
-        
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">Race Comparison Results</h1>
+            <% if (typeof runnerName !== 'undefined' && runnerName) { %>
+                <p class="lead">Results for <%= runnerName %></p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="back-button">
+            <a href="/" class="btn btn-outline-primary">← Compare Different Races</a>
+        </div>
+
+        <% if (typeof userResult !== 'undefined' && userResult) { %>
+            <div class="results-container mb-4">
+                <h3 class="mb-3">Your Race Time</h3>
+                <div class="user-result p-3 rounded">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h4 class="mb-0"><%= userResult.originalName %></h4>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <span class="h4 mb-0 highlight-text"><%= userResult.time %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="alert alert-danger">
                 <h4 class="alert-heading">Error</h4>
                 <p><%= error %></p>
             </div>
-        <% } %>
-
-        <% if (results && results.length === 0) { %>
-            <div class="alert alert-warning">
-                No matching athletes found between these races.
-            </div>
-        <% } else if (results && results.length > 0) { %>
-            <h2>Matching Athletes</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Athlete Name</th>
-                        <th>Race 1 Time</th>
-                        <th>Race 2 Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% results.forEach(result => { %>
-                        <tr>
-                            <td><%= result.name %></td>
-                            <td><%= result.race1Time %></td>
-                            <td><%= result.race2Time %></td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } %>
-        
-        <a href="/" class="btn btn-primary mb-4">Compare Different Races</a>
-
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h3>Athletes from Race 1</h3>
-                <% if (athletes1 && athletes1.length > 0) { %>
-                    <table class="table table-sm">
+        <% } else { %>
+            <% if (!results || results.length === 0) { %>
+                <div class="alert alert-warning">
+                    <h4 class="alert-heading">No Matches Found</h4>
+                    <p>We couldn't find any athletes who completed both races. This might be because:</p>
+                    <ul>
+                        <li>The races are from very different regions</li>
+                        <li>The races happened too far apart in time</li>
+                        <li>There might be inconsistencies in how names are recorded</li>
+                    </ul>
+                </div>
+            <% } else { %>
+                <!-- Matching Athletes Section -->
+                <div class="results-container">
+                    <h2 class="mb-4">Matching Athletes</h2>
+                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Time</th>
+                                <th>Athlete Name</th>
+                                <th>Race 1 Time</th>
+                                <th>Race 2 Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% athletes1.forEach(athlete => { %>
-                                <tr>
-                                    <td><%= athlete.originalName %></td>
-                                    <td><%= athlete.time %></td>
+                            <% results.forEach(result => { %>
+                                <tr class="<%= (typeof closestMatches !== 'undefined' && closestMatches.includes(result.name)) ? 'closest-match' : '' %>">
+                                    <td>
+                                        <%= result.name %>
+                                        <% if (typeof closestMatches !== 'undefined' && closestMatches.includes(result.name)) { %>
+                                            <span class="badge bg-success">Closest Match</span>
+                                        <% } %>
+                                    </td>
+                                    <td><%= result.race1Time %></td>
+                                    <td><%= result.race2Time %></td>
                                 </tr>
                             <% }); %>
                         </tbody>
                     </table>
-                <% } else { %>
-                    <div class="alert alert-info">No athletes found in Race 1</div>
-                <% } %>
-            </div>
-            <div class="col-md-6">
-                <h3>Athletes from Race 2</h3>
-                <% if (athletes2 && athletes2.length > 0) { %>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% athletes2.forEach(athlete => { %>
-                                <tr>
-                                    <td><%= athlete.originalName %></td>
-                                    <td><%= athlete.time %></td>
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
-                <% } else { %>
-                    <div class="alert alert-info">No athletes found in Race 2</div>
-                <% } %>
-            </div>
-        </div>
+                </div>
+
+                <!-- Race Results Section -->
+                <div class="row">
+                    <!-- Race 1 Results -->
+                    <div class="col-md-6">
+                        <div class="results-container">
+                            <h3 class="mb-3">Race 1 Athletes</h3>
+                            <% if (athletes1 && athletes1.length > 0) { %>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% athletes1.forEach(athlete => { %>
+                                            <tr class="<%= (typeof userResult !== 'undefined' && userResult && athlete.originalName === userResult.originalName) ? 'user-result' : '' %>">
+                                                <td>
+                                                    <%= athlete.originalName %>
+                                                    <% if (typeof userResult !== 'undefined' && userResult && athlete.originalName === userResult.originalName) { %>
+                                                        <span class="badge bg-primary">You</span>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= athlete.time %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <div class="alert alert-info">No athletes found in Race 1</div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Race 2 Results -->
+                    <div class="col-md-6">
+                        <div class="results-container">
+                            <h3 class="mb-3">Race 2 Athletes</h3>
+                            <% if (athletes2 && athletes2.length > 0) { %>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% athletes2.forEach(athlete => { %>
+                                            <tr>
+                                                <td><%= athlete.originalName %></td>
+                                                <td><%= athlete.time %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <div class="alert alert-info">No athletes found in Race 2</div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        <% } %>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
