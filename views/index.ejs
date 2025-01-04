@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Race Time Predictor</title>
+    <title>Race Time Comparer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="hero-section">
         <div class="container">
-            <h1 class="display-4 mb-3">Race Time Predictor</h1>
+            <h1 class="display-4 mb-3">Race Time Comparer</h1>
             <p class="description">
-                Want to know how you might perform in an upcoming race? This tool helps you predict your finish time by comparing athletes who've completed both your previous race and your target race. Simply enter your name, your completed race results URL, and the URL of the race you're planning to run.
+                Want to know how you might perform in an upcoming race? This tool helps you compare your finish time by analyzing athletes who've completed both your previous race and your target race. Simply enter your name, your completed race results URL, and the URL of the race you're planning to run.
             </p>
         </div>
     </div>
 
     <div class="container">
+        <div class="alert alert-info mb-4">
+            <h5 class="alert-heading">📝 Supported Race Results Websites</h5>
+            <p class="mb-2">Currently, this tool supports results from:</p>
+            <ul class="mb-2">
+                <li>ultrasignup.com</li>
+                <li>pacificmultisports.com</li>
+            </ul>
+            <p class="mb-0">
+                Need support for other race sites or found an issue? Please 
+                <a href="https://github.com/wadewegner/race-compare/issues" target="_blank" class="alert-link">open an issue on GitHub</a>.
+            </p>
+        </div>
+
         <div class="form-container">
             <form action="/compare" method="POST">
                 <div class="mb-4">
