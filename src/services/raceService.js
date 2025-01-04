@@ -14,7 +14,7 @@ class RaceService {
                     '--disable-extensions',
                     '--disable-software-rasterizer',
                     '--window-size=1280,800',
-                    '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    '--user-agent=RaceCompare-Bot/1.0 (+https://github.com/wadewegner/race-compare) Chromium/120.0.0.0'
                 ],
                 executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
                 defaultViewport: {
@@ -39,12 +39,13 @@ class RaceService {
             browser = await puppeteer.launch(options);
             const page = await browser.newPage();
             
-            // Set headers to mimic a real browser
+            // Set headers to mimic a real browser and identify our bot
             await page.setExtraHTTPHeaders({
                 'Accept-Language': 'en-US,en;q=0.9',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
+                'Upgrade-Insecure-Requests': '1',
+                'X-Bot-Info': 'RaceCompare-Bot - A tool for comparing race results. Contact/Issues: https://github.com/wadewegner/race-compare'
             });
             
             console.log(`Navigating to ${url}`);
