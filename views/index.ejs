@@ -52,7 +52,7 @@
                     <div class="form-text">Enter the URL of the race you want to compare against.</div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Compare My Race Time</button>
+                <button type="submit" class="btn btn-primary w-100" id="compareButton">Compare My Race Time</button>
             </form>
         </div>
     </div>
@@ -75,6 +75,14 @@
                     this.value = defaultValue;
                 }
             });
+        });
+
+        // Handle form submission and button state
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const button = document.getElementById('compareButton');
+            button.disabled = true;
+            button.classList.add('btn-loading');
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Comparing...';
         });
     </script>
 </body>

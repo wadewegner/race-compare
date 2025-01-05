@@ -49,7 +49,7 @@ app.post('/compare', async (req, res) => {
                 
                 closestMatches = matchesWithDiff
                     .sort((a, b) => a.timeDiff - b.timeDiff)
-                    .slice(0, 2)
+                    .slice(0, 1)
                     .map(match => match.name);
             }
         }
