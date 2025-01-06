@@ -9,6 +9,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+// Redirect from walrus URL to racetimeinsights.com
+app.use((req, res, next) => {
+    if (req.hostname === 'walrus-app-hhf9v.ondigitalocean.app') {
+        return res.redirect(301, 'https://racetimeinsights.com' + req.url);
+    }
+    next();
+});
+
 // Set EJS as templating engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
