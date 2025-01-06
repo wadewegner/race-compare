@@ -1,3 +1,10 @@
+domains:
+- domain: racetimeinsights.com
+  type: PRIMARY
+  zone: racetimeinsights.com
+- domain: www.racetimeinsights.com
+  type: ALIAS
+  zone: racetimeinsights.com
 ingress:
   rules:
   - component:
