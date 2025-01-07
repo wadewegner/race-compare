@@ -20,7 +20,8 @@ class RaceService {
                 defaultViewport: {
                     width: 1280,
                     height: 800
-                }
+                },
+                dumpio: true,
             };
 
             // Add environment info logging
